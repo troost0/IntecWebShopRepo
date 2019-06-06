@@ -93,6 +93,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\IntecWebShop.Core\IntecWebShop.Core.csproj">
+      <Project>{0bad2373-675d-4665-8b30-d840715e5989}</Project>
+      <Name>IntecWebShop.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IntecWebShop.WebUI\IntecWebShop.WebUI.csproj">
       <Project>{1BEF81BF-20C6-4D75-8B6F-215A896B1FD3}</Project>
       <Name>IntecWebShop.WebUI</Name>

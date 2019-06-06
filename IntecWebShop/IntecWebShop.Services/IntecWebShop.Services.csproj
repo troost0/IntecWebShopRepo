@@ -43,5 +43,11 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IntecWebShop.Core\IntecWebShop.Core.csproj">
+      <Project>{0bad2373-675d-4665-8b30-d840715e5989}</Project>
+      <Name>IntecWebShop.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
