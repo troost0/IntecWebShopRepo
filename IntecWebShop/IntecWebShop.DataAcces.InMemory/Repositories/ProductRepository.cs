@@ -11,16 +11,14 @@ namespace IntecWebShop.DataAcces.InMemory.Repositories
     public class ProductRepository
     {
         ObjectCache Cache = MemoryCache.Default;
-        List<Product> Products = new List<Product>();
+        List<Product> Products;
 
         public ProductRepository()
         {
-            if (Products == null)
-            {
-                Products = new List<Product>();
-            }
-
             Products = (List<Product>)Cache["products"];
+
+            if (Products == null)
+                Products = new List<Product>();
         }
 
         public void Commit()
@@ -36,7 +34,12 @@ namespace IntecWebShop.DataAcces.InMemory.Repositories
 
         public void Update(Product product)
         {
-            var tempProduct = FindProduct(product.Id);
+            var index = Products.FindIndex(x => x.Id == product.Id);
+
+            if (index == -1)
+                throw new ArgumentNullException();
+
+            Products[index] = product;
             Commit();
         }
 
@@ -55,10 +58,13 @@ namespace IntecWebShop.DataAcces.InMemory.Repositories
             return Products.AsQueryable();
         }
 
-        public void Delete(string id)
+        public bool Delete(string id)
         {
             var tempProduct = FindProduct(id);
-            Products.Remove(tempProduct);
+            var isDeleted = Products.Remove(tempProduct);
+            Commit();
+            return isDeleted;
         }
+
     }
 }
