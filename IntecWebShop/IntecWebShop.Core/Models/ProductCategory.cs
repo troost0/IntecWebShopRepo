@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace IntecWebShop.Core.Models
 {
-    public class ProductCategory
+    public class ProductCategory : BaseEntity
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
-
         [DisplayName("Category Name")]
         public string Category { get; set; }
     }
