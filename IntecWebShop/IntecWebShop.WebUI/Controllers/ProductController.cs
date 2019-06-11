@@ -4,18 +4,20 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using IntecWebShop.Core.Models;
+using IntecWebShop.Core.ViewModels;
 using IntecWebShop.DataAcces.InMemory.Repositories;
 
 namespace IntecWebShop.WebUI.Controllers
 {
     public class ProductController : Controller
     {
-        public ProductRepository Context { get; set; } = new ProductRepository();
+        public ProductRepository _productContext = new ProductRepository();
+        public ProductCategoryRepository _productCategoryContext = new ProductCategoryRepository();
 
         // GET: Product
         public ActionResult Index()
         {
-            var products = Context.Collection().ToList(); 
+            var products = _productContext.Collection().ToList(); 
 
             return View(products);
         }
@@ -24,7 +26,11 @@ namespace IntecWebShop.WebUI.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            return View();
+            ProductManagerViewModel viewmodel = new ProductManagerViewModel();
+            viewmodel.Product = new Product();
+            viewmodel.ProductCategories = _productCategoryContext.Collection();
+
+            return View(viewmodel);
         }
 
         [HttpPost]
@@ -33,7 +39,7 @@ namespace IntecWebShop.WebUI.Controllers
             if (!ModelState.IsValid)
                 return View();
 
-            Context.Insert(product);
+            _productContext.Insert(product);
 
             return RedirectToAction("Index");
         }
@@ -41,7 +47,7 @@ namespace IntecWebShop.WebUI.Controllers
         [HttpGet]
         public ActionResult Delete(string id)
         {
-            var productToDelete = Context.FindProduct(id);
+            var productToDelete = _productContext.FindProduct(id);
             return View(productToDelete);
         }
 
@@ -50,7 +56,7 @@ namespace IntecWebShop.WebUI.Controllers
         [ActionName("Delete")]
         public ActionResult ConfirmDelete(string id)
         {
-            if (!Context.Delete(id))
+            if (!_productContext.Delete(id))
                 return HttpNotFound();
 
             return RedirectToAction("Index");
@@ -59,13 +65,17 @@ namespace IntecWebShop.WebUI.Controllers
         [HttpGet]
         public ActionResult Edit(string id)
         {
-            return View(Context.FindProduct(id));
+            ProductManagerViewModel viewmodel = new ProductManagerViewModel();
+            viewmodel.Product = _productContext.FindProduct(id);
+            viewmodel.ProductCategories = _productCategoryContext.Collection();
+
+            return View(viewmodel);
         }
 
         [HttpPost]
         public ActionResult Edit(Product product)
         {
-            Context.Update(product);
+            _productContext.Update(product);
 
             return RedirectToAction("Index");
         }

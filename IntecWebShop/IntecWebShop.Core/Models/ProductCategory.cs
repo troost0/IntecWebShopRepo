@@ -14,7 +14,5 @@ namespace IntecWebShop.Core.Models
 
         [DisplayName("Category Name")]
         public string Category { get; set; }
-
-        public string Test { get; set; }
     }
 }
