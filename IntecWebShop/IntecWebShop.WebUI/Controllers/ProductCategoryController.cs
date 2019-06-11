@@ -1,4 +1,5 @@
-﻿using IntecWebShop.Core.Models;
+﻿using IntecWebShop.Core.Interfaces;
+using IntecWebShop.Core.Models;
 using IntecWebShop.DataAcces.InMemory.Repositories;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,17 @@ namespace IntecWebShop.WebUI.Controllers
 {
     public class ProductCategoryController : Controller
     {
-        public ProductCategoryRepository Context { get; set; } = new ProductCategoryRepository();
+        public IRepository<ProductCategory> _context;
+
+        public ProductCategoryController(IRepository<ProductCategory> productCategoryContext)
+        {
+            _context = productCategoryContext;
+        }
 
         // GET: Product
         public ActionResult Index()
         {
-            var categories = Context.Collection().ToList();
+            var categories = _context.Collection().ToList();
 
             return View(categories);
         }
@@ -33,7 +39,9 @@ namespace IntecWebShop.WebUI.Controllers
             if (!ModelState.IsValid)
                 return View();
 
-            Context.Insert(model);
+            _context.Insert(model);
+
+            _context.Commit();
 
             return RedirectToAction("Index");
         }
@@ -41,7 +49,7 @@ namespace IntecWebShop.WebUI.Controllers
         [HttpGet]
         public ActionResult Delete(string id)
         {
-            var productToDelete = Context.FindProductCategory(id);
+            var productToDelete = _context.FindInList(id);
             return View(productToDelete);
         }
 
@@ -50,8 +58,10 @@ namespace IntecWebShop.WebUI.Controllers
         [ActionName("Delete")]
         public ActionResult ConfirmDelete(string id)
         {
-            if (!Context.Delete(id))
+            if (!_context.Delete(id))
                 return HttpNotFound();
+
+            _context.Commit();
 
             return RedirectToAction("Index");
         }
@@ -59,13 +69,15 @@ namespace IntecWebShop.WebUI.Controllers
         [HttpGet]
         public ActionResult Edit(string id)
         {
-            return View(Context.FindProductCategory(id));
+            return View(_context.FindInList(id));
         }
 
         [HttpPost]
         public ActionResult Edit(ProductCategory category)
         {
-            Context.Update(category);
+            _context.Update(category);
+
+            _context.Commit();
 
             return RedirectToAction("Index");
         }

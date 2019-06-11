@@ -1,4 +1,5 @@
-﻿using IntecWebShop.Core.Models;
+﻿using IntecWebShop.Core.Interfaces;
+using IntecWebShop.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IntecWebShop.DataAcces.InMemory.Repositories
 {
-    public class InMemoryRepository<T> where T:BaseEntity
+    public class InMemoryRepository<T> : IRepository<T> where T:BaseEntity
     {
         ObjectCache _cache = MemoryCache.Default;
         List<T> _list;
@@ -44,7 +45,7 @@ namespace IntecWebShop.DataAcces.InMemory.Repositories
             tToUpdate = t;
         }
 
-        public T FindProduct(string id)
+        public T FindInList(string id)
         {
             T t = _list.Find(i => i.Id == id);
 
@@ -59,14 +60,14 @@ namespace IntecWebShop.DataAcces.InMemory.Repositories
             return _list.AsQueryable();
         }
 
-        public void Delete(string id)
+        public bool Delete(string id)
         {
             T tToDelete = _list.Find(i => i.Id == id);
 
             if (tToDelete == null)
                 throw new Exception("404 Something Not Found");
 
-            _list.Remove(tToDelete);
+            return _list.Remove(tToDelete);
         }
     }
 }
