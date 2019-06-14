@@ -37,12 +37,17 @@ namespace IntecWebShop.DataAcces.InMemory.Repositories
 
         public void Update(T t)
         {
-            T tToUpdate = _list.Find(i => i.Id == t.Id);
+            //T tToUpdate = _list.Find(i => i.Id == t.Id);
 
-            if (tToUpdate == null)
-                throw new Exception(_className + "Not Found");
+            //if (tToUpdate == null)
+            //    throw new Exception(_className + "Not Found");
 
-            tToUpdate = t;
+            int indexToUpdate = _list.FindIndex(i => i.Id == t.Id);
+
+            if (indexToUpdate == -1)
+                throw new Exception(_className + "Not Found Error 404");
+
+            _list[indexToUpdate] = t;
         }
 
         public T FindInList(string id)

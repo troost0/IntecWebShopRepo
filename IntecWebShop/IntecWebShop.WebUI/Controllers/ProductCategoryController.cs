@@ -73,9 +73,9 @@ namespace IntecWebShop.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(ProductCategory category)
+        public ActionResult Edit(ProductCategory model)
         {
-            _context.Update(category);
+            _context.Update(model);
 
             _context.Commit();
 
