@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -42,11 +43,18 @@ namespace IntecWebShop.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Product product)
+        public ActionResult Create(Product product, HttpPostedFileBase file)
         {
             if (!ModelState.IsValid)
                 return View();
 
+
+            if (file != null)
+            {
+                product.Image = product.Id + Path.GetExtension(file.FileName);
+                file.SaveAs(Server.MapPath(@"/Content/ProductImages/") + product.Image);
+            }
+            
             _productContext.Insert(product);
             _productContext.Commit();
 
@@ -84,12 +92,22 @@ namespace IntecWebShop.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Product product)
+        public ActionResult Edit(Product product, HttpPostedFileBase file)
         {
-            _productContext.Update(product);
+            if (ModelState.IsValid)
+            {
+                
 
-            _productContext.Commit();
+                if (file != null)
+                {
+                    product.Image = product.Id + Path.GetExtension(file.FileName);
+                    file.SaveAs(Server.MapPath(@"/Content/ProductImages/") + product.Image);
+                }
 
+                _productContext.Update(product);
+
+                _productContext.Commit();
+            }
             return RedirectToAction("Index");
         }
 
