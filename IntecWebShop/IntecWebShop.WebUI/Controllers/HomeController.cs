@@ -1,5 +1,6 @@
 ﻿using IntecWebShop.Core.Interfaces;
 using IntecWebShop.Core.Models;
+using IntecWebShop.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,34 @@ namespace IntecWebShop.WebUI.Controllers
             _productContext = productContext;
             _productCategoryContext = productCategroyContext;
         }
-        public ActionResult Index()
+        public ActionResult Index(string category = null)
         {
-            List<Product> products = _productContext.Collection().ToList();
-            return View(products);
+            var productCategories = _productCategoryContext.Collection().ToList();
+            var products = _productContext.Collection().ToList();
+
+            if (category == null)
+                products = _productContext.Collection().ToList();
+            else
+                products = _productContext.Collection().Where(x => x.Category == category).ToList();
+
+            var viewModel = new ProductListViewModel();
+
+            viewModel.Categories = productCategories;
+            viewModel.Products = products;
+
+            return View(viewModel);
         }
 
+
+
+        public ActionResult Details(string id)
+        {
+            var product = _productContext.FindInList(id);
+            if (product == null)
+                return HttpNotFound();
+
+            return View(product);
+        }
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
