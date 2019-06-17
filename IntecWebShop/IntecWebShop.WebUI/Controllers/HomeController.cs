@@ -1,4 +1,6 @@
-﻿using System;
+﻿using IntecWebShop.Core.Interfaces;
+using IntecWebShop.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,9 +10,19 @@ namespace IntecWebShop.WebUI.Controllers
 {
     public class HomeController : Controller
     {
+
+        public IRepository<Product> _productContext;
+        public IRepository<ProductCategory> _productCategoryContext;
+
+        public HomeController(IRepository<Product> productContext, IRepository<ProductCategory> productCategroyContext)
+        {
+            _productContext = productContext;
+            _productCategoryContext = productCategroyContext;
+        }
         public ActionResult Index()
         {
-            return View();
+            List<Product> products = _productContext.Collection().ToList();
+            return View(products);
         }
 
         public ActionResult About()

@@ -96,8 +96,6 @@ namespace IntecWebShop.WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                
-
                 if (file != null)
                 {
                     product.Image = product.Id + Path.GetExtension(file.FileName);
