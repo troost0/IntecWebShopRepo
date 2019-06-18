@@ -1,0 +1,14 @@
+﻿.zoom {
+    /*padding: 50px;*/
+    transition: transform .2s; /* Animation */
+    width: 200px;
+    height: 150px;
+    margin: 0 auto;
+}
+
+    .zoom:hover {
+        transition-timing-function: ease-in;
+        transform: scale(15.0) rotate(36000deg) /*skewY(40deg)*/;
+        transition-duration: 10s;
+         /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+    }

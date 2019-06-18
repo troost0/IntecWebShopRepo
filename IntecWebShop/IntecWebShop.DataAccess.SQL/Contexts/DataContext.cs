@@ -13,6 +13,10 @@ namespace IntecWebShop.DataAccess.SQL.Contexts
         public DbSet<Product> Products{ get; set; }
         public DbSet<ProductCategory> ProductCategories{ get; set; }
 
+        public DbSet<BasketItem> BasketItems { get; set; }
+
+        public DbSet<Basket> Baskets { get; set; }
+
 
         public DataContext() : base("DefaultConnection")
         {
