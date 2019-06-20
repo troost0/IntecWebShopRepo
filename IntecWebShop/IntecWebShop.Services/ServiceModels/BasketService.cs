@@ -62,6 +62,8 @@ namespace IntecWebShop.Services.ServiceModels
 
             cookie.Expires = DateTime.Now.AddDays(2);
 
+            //httpContext.Request.Cookies.Add(cookie);
+
             return basket;
         }
 
@@ -88,9 +90,16 @@ namespace IntecWebShop.Services.ServiceModels
             _basketContext.Commit();
         }
 
-        public void RemoveFromBasket()
+        public void RemoveFromBasket(HttpContextBase httpContext, string itemId)
         {
+            Basket basket = GetBasket(httpContext,true);
+            BasketItem item = basket.BasketItems.FirstOrDefault(x => x.Id == itemId);
 
+            if (item != null)
+            {
+                basket.BasketItems.Remove(item);
+                _basketContext.Commit();
+            }
         }
     }
 }
