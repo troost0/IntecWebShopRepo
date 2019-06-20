@@ -1,0 +1,10 @@
+﻿@model IntecWebShop.Core.ViewModels.BasketSummaryViewModel
+
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+            <a href="@Url.Action("Index","Basket")">@Model.BasketCount Items</a>
+        </li>
+        <li>
+            <a href="@Url.Action("Index","Basket")">@string.Format($"{Model.basketTotal:c}") €</a>
+        </li>
+    </ul>

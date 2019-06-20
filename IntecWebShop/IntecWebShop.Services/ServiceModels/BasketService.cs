@@ -47,7 +47,10 @@ namespace IntecWebShop.Services.ServiceModels
             }
             else
             {
-                basket = CreateNewBasket(httpContext);
+                if (createIfNull)
+                {
+                    basket = CreateNewBasket(httpContext);
+                }
             }
             return basket;
         }
@@ -62,6 +65,7 @@ namespace IntecWebShop.Services.ServiceModels
             cookie.Value = basket.Id;
 
             cookie.Expires = DateTime.Now.AddDays(2);
+            httpContext.Response.Cookies.Add(cookie);
 
             //httpContext.Request.Cookies.Add(cookie);
 

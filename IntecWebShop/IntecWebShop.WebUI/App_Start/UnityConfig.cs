@@ -2,6 +2,7 @@ using IntecWebShop.Core.Interfaces;
 using IntecWebShop.Core.Models;
 using IntecWebShop.DataAcces.InMemory.Repositories;
 using IntecWebShop.DataAccess.SQL.Repositories;
+using IntecWebShop.Services.ServiceModels;
 using System;
 
 using Unity;
@@ -49,6 +50,8 @@ namespace IntecWebShop.WebUI
             container.RegisterType<IRepository<Product>, SQLRepository<Product>>();
             container.RegisterType<IRepository<ProductCategory>, SQLRepository<ProductCategory>>();
             container.RegisterType<IRepository<Basket>, SQLRepository<Basket>>();
+            container.RegisterType<IRepository<BasketItem>, SQLRepository<BasketItem>>();
+            container.RegisterType<IBasketService, BasketService>();
         }
     }
 }

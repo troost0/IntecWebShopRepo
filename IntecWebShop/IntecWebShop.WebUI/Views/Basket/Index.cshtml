@@ -1,0 +1,62 @@
+﻿@model IEnumerable<IntecWebShop.Core.ViewModels.BasketItemViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Quanitity)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            Line Total
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <img style="height:50px" class="img-circle" src="~/Content/ProductImages/@item.Image" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quanitity)
+            </td>
+            <td>
+                @string.Format($"{item.Price:c}")
+            </td>
+            <td>
+                @string.Format($"{item.Price * item.Quanitity:c}")
+            </td>
+            <td>
+                <a href="@Url.Action("RemoveFromBasket","Basket",new {Id = item.Id })" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+    <tr>
+        <td colspan="4" style="text-align:right">
+            <strong>
+                Total :
+            </strong>
+            @string.Format($"{ Model.Select(x => x.Price * x.Quanitity).Sum():c}")
+        </td>
+    </tr>
+
+</table>
