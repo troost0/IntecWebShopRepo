@@ -1,5 +1,6 @@
 ﻿using IntecWebShop.Core.Interfaces;
 using IntecWebShop.Core.Models;
+using IntecWebShop.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Web;
 
 namespace IntecWebShop.Services.ServiceModels
 {
-    public class BasketService
+    public class BasketService : IBasketService
     {
         IRepository<Product> _productContext;
         IRepository<Basket> _basketContext;
@@ -92,7 +93,7 @@ namespace IntecWebShop.Services.ServiceModels
 
         public void RemoveFromBasket(HttpContextBase httpContext, string itemId)
         {
-            Basket basket = GetBasket(httpContext,true);
+            Basket basket = GetBasket(httpContext, true);
             BasketItem item = basket.BasketItems.FirstOrDefault(x => x.Id == itemId);
 
             if (item != null)
@@ -100,6 +101,65 @@ namespace IntecWebShop.Services.ServiceModels
                 basket.BasketItems.Remove(item);
                 _basketContext.Commit();
             }
+        }
+
+        public List<BasketItemViewModel> GetBasketItems(HttpContextBase httpContext)
+        {
+            Basket basket = GetBasket(httpContext, false);
+
+            if (basket != null)
+            {
+                var result = (from b in basket.BasketItems
+                              join p in _productContext.Collection()
+                              on b.ProductId equals p.Id
+                              select new BasketItemViewModel()
+                              {
+                                  Id = b.Id,
+                                  Quanitity = b.Quantity,
+                                  Image = p.Image,
+                                  Price = p.Price,
+                                  ProductName = p.Name
+                              }).ToList() ;
+
+                return result;
+            }
+            else
+            {
+                return new List<BasketItemViewModel>();
+            }
+
+            
+
+        }
+
+        public BasketSummaryViewModel GetBasketSummary(HttpContextBase httpContext)
+        {
+            Basket basket = GetBasket(httpContext,false);
+
+            BasketSummaryViewModel model = new BasketSummaryViewModel(0,0);
+
+            if (basket != null)
+            {
+                int? basketCount = (from item in basket.BasketItems
+                                    select item.Quantity).Sum();
+
+                decimal? basketTotal = (from item in basket.BasketItems
+                                        join p in _productContext.Collection()
+                                        on item.ProductId equals p.Id
+                                        select item.Quantity * p.Price).Sum();
+
+                model.BasketCount = basketCount ?? 0;
+                model.basketTotal = basketTotal ?? decimal.Zero;
+
+                return model;
+            }
+            else
+            {
+                return model;
+            }
+
+
+            
         }
     }
 }
